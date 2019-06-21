@@ -49,7 +49,7 @@ import org.osgi.service.component.annotations.Reference;
 public class GuestbookPortlet extends MVCPortlet {
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws IOException, PortletException {
-
+System.out.println();
 		try {
 			ServiceContext serviceContext = ServiceContextFactory.getInstance(Guestbook.class.getName(), renderRequest);
 			long groupId = serviceContext.getScopeGroupId();
