@@ -1,0 +1,4 @@
+Bundle-Name: ListingModule
+Bundle-SymbolicName: com.stc.portal
+Bundle-Version: 1.0.0
+Export-Package: com.stc.portal.constants
