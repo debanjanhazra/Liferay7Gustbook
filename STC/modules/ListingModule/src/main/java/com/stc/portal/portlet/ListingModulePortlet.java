@@ -6,6 +6,7 @@ import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleModel;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
@@ -54,41 +55,44 @@ public class ListingModulePortlet extends MVCPortlet {
 
 	@Override
 		public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
-				throws IOException, PortletException {
-			ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-			List<DDMStructure> ddmStructureList = DDMStructureLocalServiceUtil.getStructures(themeDisplay.getScopeGroupId());
-			
-			String structureKey = StringPool.BLANK;
-			if(Validator.isNotNull(ddmStructureList)) {
-				_log.info("Structure List size +"+ ddmStructureList.size());
-				for(DDMStructure ddmStructure : ddmStructureList) {
-					if(ddmStructure.getName(LocaleUtil.US).equalsIgnoreCase("vendorTender")) {
-						structureKey = ddmStructure.getStructureKey();
-						break;
-					}
+			throws IOException, PortletException {
+		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		List<DDMStructure> ddmStructureList = DDMStructureLocalServiceUtil.getStructures(themeDisplay.getScopeGroupId());
+
+		String structureKey = StringPool.BLANK;
+		if (Validator.isNotNull(ddmStructureList)) {
+			_log.info("Structure List size +" + ddmStructureList.size());
+			for (DDMStructure ddmStructure : ddmStructureList) {
+				if (ddmStructure.getName(LocaleUtil.US).equalsIgnoreCase("vendorTender")) {
+					structureKey = ddmStructure.getStructureKey();
+					break;
 				}
 			}
-			_log.info("structureKey :::::::::::: "+structureKey);
-			List<JournalArticle> articles = JournalArticleLocalServiceUtil.getStructureArticles(themeDisplay.getScopeGroupId(), structureKey);
-			List<VendorListingModel> vendorListingModelArray = new ArrayList<VendorListingModel>();
-			for (JournalArticle article : articles) {
-				if (!article.isInTrash()) {
-					
-					try {
-						VendorListingModel vendorListingModel = parseDealRegistraionArticle(article);
-						vendorListingModel.setWorkId(article.getArticleId());
-						vendorListingModelArray.add(vendorListingModel);
-					} catch (DocumentException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-			_log.info(vendorListingModelArray.size());
-			
-			renderRequest.setAttribute("vendorListingModelArray", vendorListingModelArray);
-			super.doView(renderRequest, renderResponse);
 		}
+		_log.info("structureKey :::::::::::: " + structureKey);
+		List<JournalArticle> articles = JournalArticleLocalServiceUtil.getStructureArticles(themeDisplay.getScopeGroupId(), structureKey);
+		List<VendorListingModel> vendorListingModelArray = new ArrayList<VendorListingModel>();
+		for (JournalArticle article : articles) {
+			try {
+				if (!article.isInTrash() && JournalArticleLocalServiceUtil.isLatestVersion(themeDisplay.getScopeGroupId(), article.getArticleId(), article.getVersion())) {
+
+					VendorListingModel vendorListingModel = parseDealRegistraionArticle(article);
+					vendorListingModel.setWorkId(article.getArticleId());
+					vendorListingModelArray.add(vendorListingModel);
+				}
+			} catch (DocumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (PortalException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		_log.info(vendorListingModelArray.size());
+
+		renderRequest.setAttribute("vendorListingModelArray", vendorListingModelArray);
+		super.doView(renderRequest, renderResponse);
+	}
 	
 	private static VendorListingModel parseDealRegistraionArticle(JournalArticleModel article) throws DocumentException {
 		Document document = SAXReaderUtil.read(article.getContent());

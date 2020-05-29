@@ -1,20 +1,10 @@
 <%@ include file="/init.jsp"%>
-
-<table class="table table-striped">
-	<thead>
-		<tr>
-			<th scope="col">Work Id</th>
-			<th scope="col">Tender Name</th>
-			<th scope="col">Tender Description</th>
-		</tr>
-	</thead>
-	<tbody>
-      	<c:forEach var="vendorListingModel" items="${vendorListingModelArray}">
-		    <tr>
-				<th scope="row"><c:out value = "${vendorListingModel.workId}"/><p></th>
-				<td><c:out value = "${vendorListingModel.tenderName}"/><p></td>
-				<td><c:out value = "${vendorListingModel.tenderDesc}"/><p></td>
-			</tr>
-		</c:forEach>
-	</tbody>
-</table>
+<liferay-ui:search-container delta="5" deltaConfigurable="true" emptyResultsMessage="No item available">
+	<liferay-ui:search-container-results results="${vendorListingModelArray}" />
+	<liferay-ui:search-container-row className="com.stc.portal.model.VendorListingModel" modelVar="aProduct">
+		<liferay-ui:search-container-column-text href="#" property="workId" name="Work Id" />
+		<liferay-ui:search-container-column-text property="tenderName" name="Tender Name" />
+		<liferay-ui:search-container-column-text property="tenderDesc" name="Tender Description" />
+	</liferay-ui:search-container-row>
+	<liferay-ui:search-iterator />
+</liferay-ui:search-container>
