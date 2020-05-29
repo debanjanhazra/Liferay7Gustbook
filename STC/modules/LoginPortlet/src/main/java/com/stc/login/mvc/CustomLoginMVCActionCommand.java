@@ -36,7 +36,7 @@ public class CustomLoginMVCActionCommand extends BaseMVCActionCommand {
 		boolean rememberMe = ParamUtil.getBoolean(actionRequest, "rememberMe");
 		String authType = CompanyConstants.AUTH_TYPE_EA;
 		AuthenticatedSessionManagerUtil.login(request, response, login, password, rememberMe, authType);
-		actionResponse.sendRedirect(themeDisplay.getPathMain());
+		actionResponse.sendRedirect("/group/"+themeDisplay.getScopeGroupName()+"/home");
 	}
 
 }
