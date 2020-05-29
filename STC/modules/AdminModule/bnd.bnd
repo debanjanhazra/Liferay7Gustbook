@@ -1,4 +1,4 @@
 Bundle-Name: AdminModule
-Bundle-SymbolicName: com.stc.portal
+Bundle-SymbolicName: com.stc.admin
 Bundle-Version: 1.0.0
 Export-Package: com.stc.portal.constants
