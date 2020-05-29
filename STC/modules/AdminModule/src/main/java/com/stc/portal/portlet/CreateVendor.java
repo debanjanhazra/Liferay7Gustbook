@@ -27,7 +27,7 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
-		"com.liferay.portlet.display-category=category.sample",
+		"com.liferay.portlet.display-category=STC",
 		"com.liferay.portlet.instanceable=true",
 		"javax.portlet.security-role-ref=power-user,user",
 		"javax.portlet.init-param.view-template=/vendor.jsp",
@@ -41,9 +41,5 @@ public class CreateVendor extends GenericPortlet {
 	@Override
 	protected void doView(RenderRequest request, RenderResponse response)
 		throws IOException, PortletException {
-
-		PrintWriter printWriter = response.getWriter();
-
-		printWriter.print("DS Portlet - Hello World!");
 	}
 }
