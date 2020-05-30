@@ -2,16 +2,16 @@ package com.stc.portal.portlet;
 
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
-//import com.liferay.journal.service.permission.JournalArticlePermission
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleModel;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
+import com.liferay.journal.service.JournalArticleServiceUtil;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -57,8 +57,7 @@ public class ListingModulePortlet extends MVCPortlet {
 	private static final Log _log = LogFactoryUtil.getLog(ListingModulePortlet.class);
 
 	@Override
-		public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
-			throws IOException, PortletException {
+	public void doView(RenderRequest renderRequest, RenderResponse renderResponse) throws IOException, PortletException {
 		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		List<DDMStructure> ddmStructureList = DDMStructureLocalServiceUtil.getStructures(themeDisplay.getScopeGroupId());
 
@@ -73,23 +72,15 @@ public class ListingModulePortlet extends MVCPortlet {
 			}
 		}
 		_log.info("structureKey :::::::::::: " + structureKey);
-		List<JournalArticle> articles = JournalArticleLocalServiceUtil.getStructureArticles(themeDisplay.getScopeGroupId(), structureKey);
+		List<JournalArticle> articles = JournalArticleServiceUtil.getArticlesByStructureId(themeDisplay.getScopeGroupId(), structureKey, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 		List<VendorListingModel> vendorListingModelArray = new ArrayList<VendorListingModel>();
-		PermissionChecker permissionChecker = themeDisplay.getPermissionChecker();
 		for (JournalArticle article : articles) {
-			//JournalArticlePermission.check(permissionChecker, resourcePrimKey, actionId);
 			try {
-				
-				if (!article.isInTrash() && JournalArticleLocalServiceUtil.isLatestVersion(themeDisplay.getScopeGroupId(), article.getArticleId(), article.getVersion())) {
-					VendorListingModel vendorListingModel = parseDealRegistraionArticle(article);
-					vendorListingModel.setWorkId(article.getArticleId());
-					vendorListingModelArray.add(vendorListingModel);
-				}
+				_log.info("journal article size :::::::::::: " + articles.size());
+				VendorListingModel vendorListingModel = parseDealRegistraionArticle(article);
+				vendorListingModel.setWorkId(article.getArticleId());
+				vendorListingModelArray.add(vendorListingModel);
 			} catch (DocumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (PortalException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -98,7 +89,7 @@ public class ListingModulePortlet extends MVCPortlet {
 		renderRequest.setAttribute("vendorListingModelArray", vendorListingModelArray);
 		super.doView(renderRequest, renderResponse);
 	}
-	
+
 	private static VendorListingModel parseDealRegistraionArticle(JournalArticleModel article) throws DocumentException {
 		Document document = SAXReaderUtil.read(article.getContent());
 

@@ -46,7 +46,7 @@ import org.osgi.service.component.annotations.Component;
 		"com.liferay.portlet.instanceable=true",
 		"javax.portlet.display-name=AdminModule",
 		"javax.portlet.init-param.template-path=/",
-		"javax.portlet.init-param.view-template=/view.jsp",
+		"javax.portlet.init-param.view-template=/createTender/view.jsp",
 		"javax.portlet.name=" + AdminModulePortletKeys.ADMINMODULE,
 		"javax.portlet.resource-bundle=content.Language",
 		"javax.portlet.security-role-ref=power-user,user"
@@ -60,11 +60,11 @@ public class AdminModulePortlet extends MVCPortlet {
 	private static final  Log _log = LogFactoryUtil.getLog(AdminModulePortlet.class);
 	
 	@Override
-		public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
-				throws IOException, PortletException {
-		_log.info("render");
-			super.doView(renderRequest, renderResponse);
-		}
+	public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
+			throws IOException, PortletException {
+	_log.info("render");
+		super.doView(renderRequest, renderResponse);
+	}
 	
 	public void createTender(ActionRequest actionRequest, ActionResponse actionResponse) {
 		String title = ParamUtil.getString(actionRequest, "title");
@@ -104,6 +104,8 @@ public class AdminModulePortlet extends MVCPortlet {
 		ServiceContext serviceContext = new ServiceContext();
 		serviceContext.setScopeGroupId(themeDisplay.getScopeGroupId());
 		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_PUBLISH);
+		serviceContext.setAddGuestPermissions(false);
+		serviceContext.setAddGroupPermissions(false);
 		try {
 			JournalArticle article = JournalArticleLocalServiceUtil.addArticle(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), 0, titleMap, descriptionMap, articleContent, structureKey,
 					"", serviceContext);

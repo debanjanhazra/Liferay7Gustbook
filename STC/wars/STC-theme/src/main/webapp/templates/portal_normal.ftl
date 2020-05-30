@@ -37,33 +37,40 @@
 			</div>
 		</div>-->
 
-		<#if !is_signed_in>
-			<#--<a data-redirect="${is_login_redirect_required?string}" href="${sign_in_url}" id="sign-in" rel="nofollow">${sign_in_text}</a>-->
-		<#else>
-			<#if has_navigation && is_setup_complete>
-				<#include "${full_templates_path}/navigation.ftl" />
-			</#if>
-		</#if>
+		
 	</header>
-
+	
 	<section id="content">
-		<h2 class="hide-accessible" role="heading" aria-level="1">${the_title}</h2>
-
-		<#if selectable>
-			<@liferay_util["include"] page=content_include />
-		<#else>
-			${portletDisplay.recycle()}
-
-			${portletDisplay.setTitle(the_title)}
-
-			<@liferay_theme["wrap-portlet"] page="portlet.ftl">
+		<main role="main" class="container">
+			<div class="my-3 p-3 bg-white rounded box-shadow">
+			<#if !is_signed_in>
+				<#--<a data-redirect="${is_login_redirect_required?string}" href="${sign_in_url}" id="sign-in" rel="nofollow">${sign_in_text}</a>-->
+			<#else>
+				<#if has_navigation && is_setup_complete>
+					<#include "${full_templates_path}/navigation.ftl" />
+				</#if>
+			</#if>
+			<h2 class="hide-accessible" role="heading" aria-level="1">${the_title}</h2>
+	
+			<#if selectable>
 				<@liferay_util["include"] page=content_include />
-			</@>
-		</#if>
+			<#else>
+				${portletDisplay.recycle()}
+	
+				${portletDisplay.setTitle(the_title)}
+				
+				<@liferay_theme["wrap-portlet"] page="portlet.ftl">
+					<@liferay_util["include"] page=content_include />
+				</@>
+			</#if>
+			</div>
+		</main>
+
 	</section>
 
 	<footer id="footer" role="contentinfo">
-		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"  crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
 	</footer>
 </div>
 

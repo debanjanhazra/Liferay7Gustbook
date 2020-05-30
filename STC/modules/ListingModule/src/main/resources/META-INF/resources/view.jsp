@@ -1,4 +1,5 @@
 <%@ include file="/init.jsp"%>
+<div class="table-responsive">
 <liferay-ui:search-container delta="5" deltaConfigurable="true" emptyResultsMessage="No item available">
 	<liferay-ui:search-container-results results="${vendorListingModelArray}" />
 	<liferay-ui:search-container-row className="com.stc.portal.model.VendorListingModel" modelVar="aProduct">
@@ -8,3 +9,4 @@
 	</liferay-ui:search-container-row>
 	<liferay-ui:search-iterator />
 </liferay-ui:search-container>
+</div>
