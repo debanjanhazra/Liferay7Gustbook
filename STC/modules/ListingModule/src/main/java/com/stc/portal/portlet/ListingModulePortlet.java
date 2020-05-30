@@ -2,6 +2,7 @@ package com.stc.portal.portlet;
 
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
+//import com.liferay.journal.service.permission.JournalArticlePermission
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleModel;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
@@ -10,6 +11,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -72,10 +75,12 @@ public class ListingModulePortlet extends MVCPortlet {
 		_log.info("structureKey :::::::::::: " + structureKey);
 		List<JournalArticle> articles = JournalArticleLocalServiceUtil.getStructureArticles(themeDisplay.getScopeGroupId(), structureKey);
 		List<VendorListingModel> vendorListingModelArray = new ArrayList<VendorListingModel>();
+		PermissionChecker permissionChecker = themeDisplay.getPermissionChecker();
 		for (JournalArticle article : articles) {
+			//JournalArticlePermission.check(permissionChecker, resourcePrimKey, actionId);
 			try {
+				
 				if (!article.isInTrash() && JournalArticleLocalServiceUtil.isLatestVersion(themeDisplay.getScopeGroupId(), article.getArticleId(), article.getVersion())) {
-
 					VendorListingModel vendorListingModel = parseDealRegistraionArticle(article);
 					vendorListingModel.setWorkId(article.getArticleId());
 					vendorListingModelArray.add(vendorListingModel);

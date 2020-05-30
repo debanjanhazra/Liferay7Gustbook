@@ -20,4 +20,9 @@ dependencies {
 	compileOnly group: 'com.liferay', name: 'com.liferay.dynamic.data.mapping.api'
 	compileOnly 'com.liferay:com.liferay.petra.string'
 	compileOnly 'com.liferay:com.liferay.journal.api'
+	compileOnly group: 'com.liferay', name: 'com.liferay.journal.service'
+	// https://mvnrepository.com/artifact/com.liferay/com.liferay.journal.service
+	compileOnly group: 'com.liferay', name: 'com.liferay.journal.service', version: '6.0.20'
+	
+	
 }
