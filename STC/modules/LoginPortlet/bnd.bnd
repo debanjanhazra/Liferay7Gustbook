@@ -1,4 +1,0 @@
-Bundle-Name: LoginPortlet
-Bundle-SymbolicName: com.stc.login
-Bundle-Version: 1.0.0
-Export-Package: com.stc.login.constants
